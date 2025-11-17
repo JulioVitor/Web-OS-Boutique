@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Vendas - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lingerie.css">
+</head>
+<body>
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Histórico de Vendas</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" onclick="Utils.loadPage('vendas-rapidas')">
+                    💰 Nova Venda
+                </button>
+                <button class="btn btn-outline" onclick="Utils.loadPage('dashboard')">
+                    📊 Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-card">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="form-label">Data Início</label>
+                    <input type="date" id="dateStart" class="form-control">
+                </div>
+                <div class="filter-group">
+                    <label class="form-label">Data Fim</label>
+                    <input type="date" id="dateEnd" class="form-control">
+                </div>
+                <div class="filter-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" id="saleSearch" class="form-control" placeholder="Número ou cliente...">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-primary" onclick="SalesHistory.applyFilters()">
+                        🔍 Aplicar
+                    </button>
+                    <button class="btn btn-outline" onclick="SalesHistory.clearFilters()">
+                        🗑️ Limpar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas Rápidas -->
+        <div class="sales-stats-grid">
+            <div class="sales-stat-card">
+                <div class="sales-stat-icon">💰</div>
+                <div class="sales-stat-content">
+                    <div class="sales-stat-value" id="totalSales">R$ 0,00</div>
+                    <div class="sales-stat-label">Total em Vendas</div>
+                </div>
+            </div>
+            <div class="sales-stat-card">
+                <div class="sales-stat-icon">📦</div>
+                <div class="sales-stat-content">
+                    <div class="sales-stat-value" id="totalItems">0</div>
+                    <div class="sales-stat-label">Itens Vendidos</div>
+                </div>
+            </div>
+            <div class="sales-stat-card">
+                <div class="sales-stat-icon">👥</div>
+                <div class="sales-stat-content">
+                    <div class="sales-stat-value" id="totalCustomers">0</div>
+                    <div class="sales-stat-label">Clientes Atendidos</div>
+                </div>
+            </div>
+            <div class="sales-stat-card">
+                <div class="sales-stat-icon">🎫</div>
+                <div class="sales-stat-content">
+                    <div class="sales-stat-value" id="averageTicket">R$ 0,00</div>
+                    <div class="sales-stat-label">Ticket Médio</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Vendas -->
+        <div class="sales-list-container">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Vendas Realizadas</h3>
+                    <div class="card-actions">
+                        <button class="btn btn-outline btn-sm" onclick="SalesHistory.exportSales()">
+                            📥 Exportar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="salesList">
+                        <!-- Carregado via JavaScript -->
+                        <div class="loading">Carregando vendas...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .filters-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .sales-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sales-stat-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .sales-stat-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .sales-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .sales-stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .sales-list-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-light);
+            overflow: hidden;
+        }
+
+        .sale-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            align-items: center;
+        }
+
+        .sale-item:last-child {
+            border-bottom: none;
+        }
+
+        .sale-item:hover {
+            background: var(--light);
+        }
+
+        .sale-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .sale-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sale-customer {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .sale-details {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .sale-amount {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .sale-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .sale-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-sales {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .sales-stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .sale-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .sale-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script>
+        // Classe para gerenciar histórico de vendas
+        class SalesHistory {
+            static currentFilters = {};
+            
+            static init() {
+                console.log("📋 Inicializando Histórico de Vendas...");
+                this.loadSales();
+            }
+
+            static async loadSales() {
+                try {
+                    const params = new URLSearchParams(this.currentFilters);
+                    const response = await Utils.apiRequest(`/vendas?${params}`);
+                    
+                    if (response && response.vendas) {
+                        this.renderSales(response.vendas);
+                        this.updateStats(response.vendas);
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar vendas:', error);
+                    Utils.showNotification('Erro ao carregar histórico', 'error');
+                }
+            }
+
+            static renderSales(sales) {
+                const container = document.getElementById('salesList');
+                if (!container) return;
+
+                container.innerHTML = sales.length > 0 ? sales.map(sale => `
+                    <div class="sale-item">
+                        <div class="sale-number">${sale.numero_venda}</div>
+                        <div class="sale-info">
+                            <div class="sale-customer">${sale.cliente}</div>
+                            <div class="sale-details">
+                                ${sale.forma_pagamento} • ${sale.vendedor || 'Vendedor'}
+                            </div>
+                        </div>
+                        <div class="sale-amount">${Utils.formatCurrency(sale.total_venda)}</div>
+                        <div class="sale-date">${Utils.formatDateTime(sale.data_venda)}</div>
+                    </div>
+                `).join('') : `
+                    <div class="empty-sales">
+                        <p>Nenhuma venda encontrada</p>
+                        <button class="btn btn-primary" onclick="Utils.loadPage('vendas-rapidas')">
+                            💰 Fazer Primeira Venda
+                        </button>
+                    </div>
+                `;
+            }
+
+            static updateStats(sales) {
+                const totalSales = sales.reduce((sum, sale) => sum + sale.total_venda, 0);
+                const totalCustomers = new Set(sales.map(s => s.cliente)).size;
+                const averageTicket = sales.length > 0 ? totalSales / sales.length : 0;
+
+                document.getElementById('totalSales').textContent = Utils.formatCurrency(totalSales);
+                document.getElementById('totalCustomers').textContent = totalCustomers;
+                document.getElementById('averageTicket').textContent = Utils.formatCurrency(averageTicket);
+                document.getElementById('totalItems').textContent = sales.length;
+            }
+
+            static applyFilters() {
+                this.currentFilters = {
+                    data_inicio: document.getElementById('dateStart')?.value,
+                    data_fim: document.getElementById('dateEnd')?.value,
+                    busca: document.getElementById('saleSearch')?.value
+                };
+
+                // Remover filtros vazios
+                Object.keys(this.currentFilters).forEach(key => {
+                    if (!this.currentFilters[key]) {
+                        delete this.currentFilters[key];
+                    }
+                });
+
+                this.loadSales();
+            }
+
+            static clearFilters() {
+                this.currentFilters = {};
+                document.getElementById('dateStart').value = '';
+                document.getElementById('dateEnd').value = '';
+                document.getElementById('saleSearch').value = '';
+                this.loadSales();
+            }
+
+            static exportSales() {
+                Utils.showNotification('Exportação em desenvolvimento', 'info');
+            }
+        }
+
+        // Inicializar histórico de vendas quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            SalesHistory.init();
+        });
+    </script>
+</body>
+</html>

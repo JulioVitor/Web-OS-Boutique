@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lingerie.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 🔐 HEADER -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-brand">
+                <h1 class="brand-title">👗 WebOS </h1>
+                <span class="brand-subtitle">Gerenciamento de Clientes</span>
+            </div>
+            
+            <div class="header-actions">
+                <!-- Informações do Usuário -->
+                <div class="user-info">
+                    <span class="user-greeting">Olá, </span>
+                    <span class="user-name" id="userName">Usuário</span>
+                    <span class="user-badge" id="userPerfil">Admin</span>
+                </div>
+                
+                <!-- Botões de Controle -->
+                <div class="action-buttons">
+                    <button class="btn btn-outline" id="btnVoltar">
+                        ↩️ Voltar
+                    </button>
+                    <button class="btn btn-danger" id="btnSair">
+                        🚪 Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">👥 Gerenciamento de Clientes</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btn-novo-cliente">
+                    👤 Novo Cliente
+                </button>
+                <button class="btn btn-outline" onclick="window.location.href='dashboard.html'">
+                    📊 Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alertContainer"></div>
+
+        <!-- Filtros e Busca -->
+        <section class="dashboard-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🔍 Buscar Clientes</h3>
+                </div>
+                <div class="card-content">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <input type="text" id="input-pesquisa" class="form-input" placeholder="🔍 Buscar por nome, email ou telefone...">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <button class="btn btn-primary" id="btn-pesquisar">
+                                🔍 Pesquisar
+                            </button>
+                            <button class="btn btn-outline" id="btn-limpar-pesquisa">
+                                🗑️ Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de Clientes -->
+        <section class="dashboard-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📋 Lista de Clientes</h3>
+                    <div class="card-actions">
+                        <button class="btn btn-outline" onclick="exportarClientes()">
+                            📤 Exportar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefone</th>
+                                    <th>CPF</th>
+                                    <th>Data Cadastro</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela-clientes">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 40px; color: #6c757d;">
+                                        <div class="loading-spinner"></div>
+                                        <p>Carregando clientes...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginação -->
+                    <div class="pagination-container" id="paginacao">
+                        <!-- Paginação será carregada via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Cliente -->
+    <div id="modal-cliente" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-titulo">👤 Novo Cliente</h3>
+                <button class="modal-close" id="fechar-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cliente">
+                    <input type="hidden" id="cliente-id" value="">
+                    
+                    <div class="form-section">
+                        <h4 class="section-title">📋 Informações Pessoais</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cliente-nome">👤 Nome Completo *</label>
+                                <input type="text" id="cliente-nome" class="form-input" required placeholder="Ex: Maria Silva Santos">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-cpf">📄 CPF</label>
+                                <input type="text" id="cliente-cpf" class="form-input" placeholder="000.000.000-00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">📞 Contato</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cliente-email">📧 E-mail</label>
+                                <input type="email" id="cliente-email" class="form-input" placeholder="exemplo@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-telefone">📱 Telefone *</label>
+                                <input type="tel" id="cliente-telefone" class="form-input" required placeholder="(11) 99999-9999">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">🏠 Endereço</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cliente-endereco">📍 Endereço</label>
+                                <input type="text" id="cliente-endereco" class="form-input" placeholder="Rua, Avenida, etc.">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cliente-cidade">🏙️ Cidade</label>
+                                <input type="text" id="cliente-cidade" class="form-input" placeholder="São Paulo">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-estado">🗺️ Estado</label>
+                                <input type="text" id="cliente-estado" class="form-input" placeholder="SP" maxlength="2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4 class="section-title">📝 Observações</h4>
+                        <div class="form-group">
+                            <textarea id="cliente-observacoes" class="form-input" rows="3" placeholder="Observações sobre o cliente..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="cliente-status" checked>
+                                <span class="checkmark"></span>
+                                ✅ Cliente ativo
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btn-cancelar">
+                    ❌ Cancelar
+                </button>
+                <button class="btn btn-primary" id="btn-salvar-cliente">
+                    💾 Salvar Cliente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="modal-confirmacao" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Confirmação de Exclusão</h3>
+                <button class="modal-close" id="fechar-confirmacao">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o cliente <strong id="nome-cliente-exclusao"></strong>?</p>
+                <p class="text-muted">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btn-cancelar-exclusao">Cancelar</button>
+                <button class="btn btn-danger" id="btn-confirmar-exclusao">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/clientes.js"></script>
+
+</body>
+</html>

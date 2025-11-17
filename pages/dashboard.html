@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lingerie.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 🔐 HEADER COM CONTROLES DE SESSÃO -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-brand">
+                <h1 class="brand-title">👗 WebOS</h1>
+                <span class="brand-subtitle">Dashboard</span>
+            </div>
+            
+            <div class="header-actions">
+                <!-- Informações do Usuário -->
+                <div class="user-info">
+                    <span class="user-greeting">Olá, </span>
+                    <span class="user-name" id="userName">Usuário</span>
+                    <span class="user-badge" id="userPerfil">Admin</span>
+                </div>
+                
+                <!-- Botões de Controle -->
+                <div class="action-buttons">
+                    <!-- <button class="btn btn-outline" id="btnVoltar">
+                        ↩️ Voltar
+                    </button> -->
+                    <button class="btn btn-danger" id="btnSair">
+                        🚪 Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnNovaVenda">
+                    💰 Nova Venda
+                </button>
+                <button class="btn btn-outline" id="btnRelatorio">
+                    📈 Relatório
+                </button>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <section class="dashboard-section">
+            <h2>Visão Geral</h2>
+            <div id="dashboardStats" class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-value">Carregando...</div>
+                    <div class="stat-label">Estatísticas</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard-grid">
+            <!-- Vendas Recentes -->
+            <div class="dashboard-column">
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Vendas Recentes</h3>
+                        </div>
+                        <div class="card-content" id="vendasRecentesContent">
+                            <div class="loading">Carregando...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ações Rápidas -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Ações Rápidas</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="quick-actions-grid">
+                                <button class="quick-action-card" id="btnNovaVendaRapida">
+                                    <div class="quick-action-icon">💰</div>
+                                    <div class="quick-action-text">Nova Venda</div>
+                                </button>
+                                <button class="quick-action-card" id="btnNovoProduto">
+                                    <div class="quick-action-icon">👗</div>
+                                    <div class="quick-action-text">Novo Produto</div>
+                                </button>
+                                <button class="quick-action-card" id="btnNovoCliente">
+                                    <div class="quick-action-icon">👥</div>
+                                    <div class="quick-action-text">Novo Cliente</div>
+                                </button>
+                                <button class="quick-action-card" id="btnVerEstoque">
+                                    <div class="quick-action-icon">📦</div>
+                                    <div class="quick-action-text">Ver Estoque</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Estoque Baixo -->
+            <div class="dashboard-column">
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Estoque Baixo</h3>
+                        </div>
+                        <div class="card-content" id="estoqueBaixoContent">
+                            <div class="loading">Carregando...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Categorias Mais Vendidas -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Categorias em Destaque</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="categories-stats">
+                                <div class="category-stat">
+                                    <span class="category-badge badge-sutia">Sutiãs</span>
+                                    <span class="category-value">42% das vendas</span>
+                                </div>
+                                <div class="category-stat">
+                                    <span class="category-badge badge-calcinha">Calcinhas</span>
+                                    <span class="category-value">28% das vendas</span>
+                                </div>
+                                <div class="category-stat">
+                                    <span class="category-badge badge-conjunto">Conjuntos</span>
+                                    <span class="category-value">18% das vendas</span>
+                                </div>
+                                <div class="category-stat">
+                                    <span class="category-badge badge-pijama">Pijamas</span>
+                                    <span class="category-value">12% das vendas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/session_manager.js"></script>
+    <script src="../js/script.js"></script>
+
+</body>
+</html>

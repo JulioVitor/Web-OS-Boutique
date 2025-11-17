@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- <link rel="stylesheet" href="../css/lingerie.css"> -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- 🔐 HEADER -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="header-brand">
+                <h1 class="brand-title">👗 WebOS</h1>
+                <span class="brand-subtitle">Relatórios</span>
+            </div>
+            
+            <div class="header-actions">
+                <!-- Informações do Usuário -->
+                <div class="user-info">
+                    <span class="user-greeting">Olá, </span>
+                    <span class="user-name" id="userName">Usuário</span>
+                    <span class="user-badge" id="userPerfil">Admin</span>
+                </div>
+                
+                <!-- Botões de Controle -->
+                <div class="action-buttons">
+                    <button class="btn btn-outline" id="btnVoltar">
+                        ↩️ Voltar
+                    </button>
+                    <button class="btn btn-danger" id="btnSair">
+                        🚪 Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Relatórios Analíticos</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnGerarRelatorio">
+                    📊 Gerar Relatório
+                </button>
+                <button class="btn btn-outline" onclick="printReports()">
+                    🖨️ Imprimir
+                </button>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alertContainer"></div>
+
+        <!-- Filtros -->
+        <section class="dashboard-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🔍 Filtros do Relatório</h3>
+                </div>
+                <div class="card-content">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label for="reportPeriod">Período</label>
+                            <select id="reportPeriod" class="form-select">
+                                <option value="today">Hoje</option>
+                                <option value="yesterday">Ontem</option>
+                                <option value="week">Última Semana</option>
+                                <option value="month" selected>Último Mês</option>
+                                <option value="quarter">Último Trimestre</option>
+                                <option value="year">Último Ano</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group hidden" id="customDateGroup">
+                            <label for="startDate">Data Inicial</label>
+                            <input type="date" id="startDate" class="form-input">
+                        </div>
+                        
+                        <div class="filter-group hidden" id="customDateGroup">
+                            <label for="endDate">Data Final</label>
+                            <input type="date" id="endDate" class="form-input">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="reportType">Tipo de Relatório</label>
+                            <select id="reportType" class="form-select">
+                                <option value="completo">Relatório Completo</option>
+                                <option value="vendas">Apenas Vendas</option>
+                                <option value="estoque">Apenas Estoque</option>
+                                <option value="financeiro">Financeiro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estatísticas -->
+        <section class="dashboard-section">
+            <h2>📈 Visão Geral</h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="totalSales">R$ 0,00</div>
+                    <div class="stat-label">Vendas do Período</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-value" id="salesCount">0</div>
+                    <div class="stat-label">Total de Vendas</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="averageTicket">R$ 0,00</div>
+                    <div class="stat-label">Ticket Médio</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-label">Produtos Cadastrados</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-value" id="lowStockInfo">0</div>
+                    <div class="stat-label">Estoques Baixos</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="activeClients">0</div>
+                    <div class="stat-label">Clientes Ativos</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard-grid">
+            <!-- Coluna Esquerda -->
+            <div class="dashboard-column">
+                <!-- Gráfico de Vendas -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">💰 Vendas por Período</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vendas Recentes -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📋 Vendas Recentes</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nº Venda</th>
+                                            <th>Data</th>
+                                            <th>Cliente</th>
+                                            <th>Vendedor</th>
+                                            <th>Itens</th>
+                                            <th>Valor</th>
+                                            <th>Pagamento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="salesTableBody">
+                                        <tr>
+                                            <td colspan="7" style="text-align: center; padding: 20px; color: #6c757d;">
+                                                Carregando vendas...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="dashboard-column">
+                <!-- Produtos Mais Vendidos -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🏆 Produtos Mais Vendidos</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container">
+                                <canvas id="productsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formas de Pagamento -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">💳 Formas de Pagamento</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container">
+                                <canvas id="paymentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Estoque Baixo -->
+                <section class="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">⚠️ Estoque Baixo</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th>Categoria</th>
+                                            <th>Estoque</th>
+                                            <th>Mínimo</th>
+                                            <th>Preço Custo</th>
+                                            <th>Preço Venda</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="stockTableBody">
+                                        <tr>
+                                            <td colspan="7" style="text-align: center; padding: 20px; color: #6c757d;">
+                                                Carregando estoque...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <section class="dashboard-section actions-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🚀 Ações</h3>
+                </div>
+                <div class="card-content">
+                    <div class="actions-grid">
+                        <button class="btn btn-primary" onclick="generateFullReport()">
+                            <span id="generateReportText">📄 Gerar Relatório Completo</span>
+                            <span id="generateReportLoading" class="hidden">
+                                <i class="fas fa-spinner fa-spin"></i> Gerando...
+                            </span>
+                        </button>
+                        
+                        <button class="btn btn-outline" onclick="openExportModal()">
+                            📤 Exportar Dados
+                        </button>
+                        
+                        <button class="btn btn-outline" onclick="loadReports()">
+                            🔄 Atualizar Dados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Exportação -->
+    <div id="exportModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📤 Exportar Relatório</h3>
+                <button class="modal-close" onclick="closeExportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="exportForm">
+                    <div class="form-group">
+                        <label for="exportFormat">Formato</label>
+                        <select id="exportFormat" class="form-select">
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exportType">Tipo de Relatório</label>
+                        <select id="exportType" class="form-select">
+                            <option value="completo">Relatório Completo</option>
+                            <option value="vendas">Relatório de Vendas</option>
+                            <option value="estoque">Relatório de Estoque</option>
+                            <option value="financeiro">Relatório Financeiro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exportPeriod">Período</label>
+                        <select id="exportPeriod" class="form-select">
+                            <option value="current">Período Atual</option>
+                            <option value="custom">Período Personalizado</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeExportModal()">Cancelar</button>
+                <button class="btn btn-primary" type="submit" form="exportForm">Exportar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/session_manager.js"></script>
+    <script src="../js/relatorios.js"></script>
+    <script>
+        // Configurações específicas da página de relatórios
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📊 Página de relatórios inicializada");
+            
+            // Configurar eventos específicos
+            setupReportsPage();
+        });
+
+        function setupReportsPage() {
+            // Configurar informações do usuário
+            const userName = document.getElementById('userName');
+            const userPerfil = document.getElementById('userPerfil');
+            
+            if (userName) {
+                userName.textContent = localStorage.getItem('user_nome') || 'Usuário';
+            }
+            
+            if (userPerfil) {
+                userPerfil.textContent = localStorage.getItem('user_perfil') || 'Usuário';
+            }
+
+            // Botão Voltar
+            const btnVoltar = document.getElementById('btnVoltar');
+            if (btnVoltar) {
+                btnVoltar.addEventListener('click', function() {
+                    window.history.back();
+                });
+            }
+
+            // Botão Sair
+            const btnSair = document.getElementById('btnSair');
+            if (btnSair) {
+                btnSair.addEventListener('click', function() {
+                    if (confirm('Deseja realmente sair do sistema?')) {
+                        localStorage.removeItem('session_token');
+                        localStorage.removeItem('user_nome');
+                        localStorage.removeItem('user_perfil');
+                        window.location.href = '../index.html';
+                    }
+                });
+            }
+
+            // Botão Gerar Relatório
+            const btnGerarRelatorio = document.getElementById('btnGerarRelatorio');
+            if (btnGerarRelatorio) {
+                btnGerarRelatorio.addEventListener('click', function() {
+                    generateFullReport();
+                });
+            }
+
+            // Configurar filtro de período personalizado
+            const reportPeriod = document.getElementById('reportPeriod');
+            if (reportPeriod) {
+                reportPeriod.addEventListener('change', function() {
+                    const isCustom = this.value === 'custom';
+                    const customGroups = document.querySelectorAll('#customDateGroup');
+                    
+                    customGroups.forEach(group => {
+                        group.classList.toggle('hidden', !isCustom);
+                    });
+
+                    if (!isCustom) {
+                        setDefaultDates();
+                    }
+                });
+            }
+        }
+
+        // Sobrescrever algumas funções específicas para relatórios
+        function updateStatsCards(stats) {
+            if (document.getElementById('totalSales')) {
+                document.getElementById('totalSales').textContent = formatCurrency(stats.vendasMes);
+            }
+            if (document.getElementById('salesCount')) {
+                document.getElementById('salesCount').textContent = stats.totalVendas || '0';
+            }
+            if (document.getElementById('averageTicket')) {
+                document.getElementById('averageTicket').textContent = formatCurrency(stats.ticketMedio);
+            }
+            if (document.getElementById('totalProducts')) {
+                document.getElementById('totalProducts').textContent = stats.totalProdutos;
+            }
+            if (document.getElementById('lowStockInfo')) {
+                document.getElementById('lowStockInfo').textContent = `${stats.estoquesBaixos} produtos`;
+            }
+            if (document.getElementById('activeClients')) {
+                document.getElementById('activeClients').textContent = stats.totalClientes;
+            }
+        }
+
+        // Função auxiliar para formatar moeda
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        // Função auxiliar para formatar data
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('pt-BR');
+        }
+    </script>
+
+</body>
+</html>

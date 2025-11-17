@@ -1,0 +1,367 @@
+/* ===== ESTILOS ESPECÍFICOS PARA LINGERIE ===== */
+
+/* Badges para categorias */
+.badge-categoria {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-sutia { background: #FFE4E6; color: #BE123C; }
+.badge-calcinha { background: #F0F9FF; color: #0369A1; }
+.badge-conjunto { background: #F0FDF4; color: #15803D; }
+.badge-pijama { background: #FDF4FF; color: #A21CAF; }
+
+/* Cards de produtos */
+.produto-card {
+    border: 1px solid #F3F4F6;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.produto-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.produto-imagem {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #DB2777;
+}
+
+.produto-info {
+    padding: 1rem;
+}
+
+.produto-titulo {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1F2937;
+}
+
+.produto-detalhes {
+    color: #6B7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.produto-preco {
+    font-weight: 700;
+    color: #8B1874;
+    font-size: 1.125rem;
+}
+
+/* Filtros de lingerie */
+.filtros-lingerie {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #E5E7EB;
+}
+
+.filtro-grupo {
+    margin-bottom: 1rem;
+}
+
+.filtro-titulo {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+
+.filtro-opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filtro-opcao {
+    padding: 0.5rem 1rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filtro-opcao:hover {
+    border-color: #8B1874;
+}
+
+.filtro-opcao.ativo {
+    background: #8B1874;
+    color: white;
+    border-color: #8B1874;
+}
+
+/* Venda rápida */
+.venda-rapida-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.categorias-rapidas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.categoria-rapida {
+    background: #FDF2F8;
+    border: 2px solid #FBCFE8;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.categoria-rapida:hover {
+    border-color: #8B1874;
+    transform: scale(1.05);
+}
+
+.categoria-rapida.ativa {
+    background: #8B1874;
+    color: white;
+    border-color: #8B1874;
+}
+
+.icone-categoria {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Tabela de vendas com destaque */
+.venda-destaque {
+    border-left: 4px solid #8B1874;
+}
+
+/* Loading específico */
+.loading-lingerie {
+    background: linear-gradient(135deg, #8B1874, #B71375);
+}
+
+/* Botões com tema lingerie */
+.btn-lingerie {
+    background: linear-gradient(135deg, #8B1874, #B71375);
+    color: white;
+    border: none;
+}
+
+.btn-lingerie:hover {
+    background: linear-gradient(135deg, #6A1257, #8B1874);
+}
+
+/* Estatísticas com ícones */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border-left: 4px solid #8B1874;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8B1874;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #6B7280;
+    font-size: 0.875rem;
+}
+
+/* Estilos específicos para a página de login */
+.login-body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+}
+
+.logo-text {
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-subtitle {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.login-form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 15px;
+    }
+    
+    .login-card {
+        padding: 30px 20px;
+    }
+    
+    .logo-text {
+        font-size: 1.5rem;
+    }
+}

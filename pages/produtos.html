@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lingerie.css">
+</head>
+<body>
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Gestão de Produtos</h1>
+            <div class="page-actions">
+                <button class="btn btn-primary" id="newProductBtn">
+                    👗 Novo Produto
+                </button>
+                <button class="btn btn-outline" onclick="window.location.href='dashboard.html'">
+                    📊 Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Container de Produtos -->
+        <div id="productsContainer">
+            <!-- Carregado via JavaScript -->
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Carregando produtos...</p>
+            </div>
+        </div>
+
+        <!-- Paginação -->
+        <div id="productsPagination" class="pagination-container">
+            <!-- Carregado via JavaScript -->
+        </div>
+    </div>
+
+    <style>
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .products-header h2 {
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .filters-lingerie {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-light);
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .produto-card {
+            background: var(--white);
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .produto-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .produto-imagem {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .produto-info {
+            padding: 1.25rem;
+        }
+
+        .produto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .produto-titulo {
+            font-weight: 600;
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.3;
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+
+        .badge-categoria {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-sutia { background: #FFE4E6; color: #BE123C; }
+        .badge-calcinha { background: #F0F9FF; color: #0369A1; }
+        .badge-conjunto { background: #F0FDF4; color: #15803D; }
+        .badge-pijama { background: #FDF4FF; color: #A21CAF; }
+        .badge-body { background: #FFFBEB; color: #D97706; }
+        .badge-meia { background: #F3F4F6; color: #374151; }
+
+        .produto-detalhes {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .produto-estoque {
+            margin-bottom: 1rem;
+        }
+
+        .estoque-info {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .estoque-info.normal { background: #F0FDF4; color: #15803D; }
+        .estoque-info.warning { background: #FEF3C7; color: #D97706; }
+        .estoque-info.critical { background: #FEE2E2; color: #DC2626; }
+
+        .produto-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .produto-preco {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .produto-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .pagination-current {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+        }
+
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-lingerie {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-height: calc(100vh - 2rem);
+            }
+        }
+    </style>
+
+    <script src="../js/produtos.js"></script>
+    <script>
+        // Inicializar gestão de produtos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Produtos !== 'undefined') {
+                Produtos.init();
+            }
+        });
+    </script>
+</body>
+</html>

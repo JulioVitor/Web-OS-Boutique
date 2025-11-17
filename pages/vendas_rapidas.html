@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venda Rápida - WebOS Lingerie</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lingerie.css">
+    <link rel="stylesheet" href="../css/vendas_rapidas.css">
+</head>
+<body>
+    <div class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Venda Rápida</h1>
+            <div class="page-actions">
+                 <button class="btn btn-outline" onclick="Utils.loadPage('historico')">
+                    📋 Histórico
+                </button>           
+                
+                <button class="btn btn-outline" id="btnVoltar">
+                        ↩️ Voltar
+                    </button>
+            </div>
+        </div>
+
+        <div class="sale-layout">
+            <!-- Painel de Produtos -->
+            <div class="sale-products-panel">
+                <!-- Filtros por Categoria -->
+                <section class="sale-section">
+                    <h3>Categorias</h3>
+                    <div class="categorias-rapidas">
+                        <button class="categoria-rapida" data-categoria="sutia">
+                            <div class="icone-categoria">👙</div>
+                            <div>Sutiãs</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="calcinha">
+                            <div class="icone-categoria">🩲</div>
+                            <div>Calcinhas</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="conjunto">
+                            <div class="icone-categoria">👘</div>
+                            <div>Conjuntos</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="pijama">
+                            <div class="icone-categoria">🛌</div>
+                            <div>Pijamas</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="body">
+                            <div class="icone-categoria">👗</div>
+                            <div>Bodies</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="">
+                            <div class="icone-categoria">📦</div>
+                            <div>Todos</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="calca">
+                            <div class="icone-categoria">👖</div>
+                            <div>Calça</div>
+                        </button>
+
+                        <button class="categoria-rapida" data-categoria="camiseta">
+                            <div class="icone-categoria">👕</div>
+                            <div>Camiseta</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="camisa">
+                            <div class="icone-categoria">👔</div>
+                            <div>Camisa</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="bermuda">
+                            <div class="icone-categoria">🩳</div>
+                            <div>Bermuda</div>
+                        </button>
+                        <button class="categoria-rapida" data-categoria="shorts">
+                            <div class="icone-categoria">🩳</div>
+                            <div>Shorts</div>   
+                        </button> 
+                        <button class="categoria-rapida" data-categoria="bone">
+                            <div class="icone-categoria">🧢</div>
+                            <div>Boné</div>
+                    </div>
+                </section>
+
+                <!-- Lista de Produtos -->
+                <section class="sale-section">
+                    <h3>Produtos</h3>
+                    <div class="sale-products-container">
+                        <div id="saleProductsGrid" class="sale-products-grid">
+                            <!-- Carregado via JavaScript -->
+                            <div class="loading">Carregando produtos...</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Carrinho de Vendas -->
+            <div class="sale-cart-panel">
+                <div class="sale-cart-container">
+                    <!-- Informações da Venda -->
+                    <section class="sale-section">
+                        <h3>Informações da Venda</h3>
+                        <div class="sale-info-form">
+                            <div class="form-group">
+                                <label class="form-label">Cliente *</label>
+                                <input type="text" id="saleCustomer" class="form-control" 
+                                       placeholder="Nome do cliente" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Forma de Pagamento *</label>
+                                <select id="paymentMethod" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="dinheiro">💵 Dinheiro</option>
+                                    <option value="cartao_debito">💳 Cartão Débito</option>
+                                    <option value="cartao_credito">💳 Cartão Crédito</option>
+                                    <option value="pix">📱 PIX</option>
+                                    <option value="transferencia">🏦 Transferência</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Carrinho -->
+                    <section class="sale-section">
+                        <div id="saleCart">
+                            <!-- Carregado via JavaScript -->
+                            <div class="empty-cart">
+                                <p>🛒 Carrinho vazio</p>
+                                <p>Adicione produtos para iniciar uma venda</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/scriptVendas.js"></script>
+    <script src="../js/session_manager.js"></script>
+    <!-- <script>
+        // Inicializar venda rápida quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Vendas !== 'undefined') {
+                Vendas.init();
+            }
+        });
+    </script> -->
+</body>
+</html>
